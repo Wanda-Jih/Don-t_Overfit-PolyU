@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-data_dir= 'C:/Users/user/Desktop/class/maching learning/project/group/dataset'
+data_dir= 'C:/Users/user/Desktop/class/maching learning/project/group/Don-t_Overfit_PolyU/dataset'
 
 
 #observe train data
@@ -50,7 +50,40 @@ test=pd.DataFrame(scaler.fit_transform(test),columns=test.columns,index=test.ind
 from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
 
-log = LogisticRegression()
+'''
+LogisticRegression(
+        penalty='l2',
+        dual=False,
+        tol=1e-4,
+        C=1.0,
+        fit_intercept=True,
+        intercept_scaling=1,
+        class_weight=None,
+        random_state=None,
+        solver='liblinear',
+        max_iter=100,
+        multi_class= 'ovr',
+        verbose=0,
+        warm_start=False, 
+        n_jobs=1)
+
+'''
+log = LogisticRegression(
+        penalty='l1', #l1:拉普拉斯分佈; l2:高斯分佈
+        dual=False,
+        tol=1e-4,
+        C=0.2, #越小的數值表示越強的正則化，正則化是用來防止模型過擬合的過程 1.0/0.5/0.3/0.2/0.1
+        fit_intercept=False,
+        intercept_scaling=1,
+        class_weight=None,
+        random_state=None,
+        solver='liblinear',
+        max_iter=100,
+        multi_class= 'ovr',
+        verbose=0,
+        warm_start=False, 
+        n_jobs=1
+        )
 log.fit(x_train,y_train)
 selector = RFE(log, 25, step=1)
 
@@ -61,4 +94,4 @@ prediction = log.predict(test)
 prediction = pd.DataFrame(prediction)
 prediction.index += 250
 prediction.columns = ['target']
-prediction.to_csv('C:/Users/user/Desktop/class/maching learning/project/group/source code/result/Logistic Regression.csv', index_label='id', index=True)
+prediction.to_csv('C:/Users/user/Desktop/class/maching learning/project/group/Don-t_Overfit_PolyU/result/Logistic Regression.csv', index_label='id', index=True)
