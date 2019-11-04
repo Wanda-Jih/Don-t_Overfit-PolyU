@@ -46,22 +46,20 @@ x_train=pd.DataFrame(scaler.fit_transform(x_train0),columns=x_train0.columns,ind
 test=pd.DataFrame(scaler.fit_transform(test),columns=test.columns,index=test.index)
 
 
-#logistic regression
-from sklearn.linear_model import LogisticRegression
+#SVC
+from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV,StratifiedKFold
 
 n_fold = 20
 folds = StratifiedKFold(n_splits=n_fold, shuffle=True, random_state=42)
-log = LogisticRegression(solver='liblinear', max_iter=1000)
-parameter_grid = {'class_weight' : ['balanced', {0:0.4,1:0.6},{0:0.6,1:0.4}],
-                  'penalty' : ['l1'],
-                  'C' : [0.001, 0.01, 0.1, 1.0, 10.0, 100.0],
-                  'solver': ['liblinear', 'saga',]
-                 }
-grid_search = GridSearchCV(log, param_grid=parameter_grid, cv=folds, scoring='roc_auc')
-grid_search.fit(x_train, y_train)
+svc = SVC(probability=True, gamma='scale')
 
-#log.fit(x_train,y_train)
+parameter_grid = {'C': [0.001, 0.01, 0.1, 1.0, 10.0],
+                  'kernel': ['linear', 'poly', 'rbf'],
+                 }
+
+grid_search = GridSearchCV(svc, param_grid=parameter_grid, cv=folds, scoring='roc_auc', n_jobs=-1)
+grid_search.fit(x_train,y_train)
 
 
 #result
@@ -69,4 +67,4 @@ prediction = grid_search.predict(test)
 prediction = pd.DataFrame(prediction)
 prediction.index += 250
 prediction.columns = ['target']
-prediction.to_csv('C:/Users/user/Desktop/class/maching learning/project/group/Don-t_Overfit_PolyU/result/Logistic Regression(GridSearchCV).csv', index_label='id', index=True)
+prediction.to_csv('C:/Users/user/Desktop/class/maching learning/project/group/Don-t_Overfit_PolyU/result/SVC(GridSearchCV).csv', index_label='id', index=True)

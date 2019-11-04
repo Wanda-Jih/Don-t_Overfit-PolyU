@@ -46,27 +46,31 @@ x_train=pd.DataFrame(scaler.fit_transform(x_train0),columns=x_train0.columns,ind
 test=pd.DataFrame(scaler.fit_transform(test),columns=test.columns,index=test.index)
 
 
-#logistic regression
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import GridSearchCV,StratifiedKFold
+#SVC
+from sklearn.svm import SVC
+svc = SVC(
+        C=1.0,  
+        kernel='linear', #'linear', 'poly', 'rbf', 'sigmoid', 'precomputed' 
+        degree=3, 
+        gamma='auto', #'scale'
+        coef0=0.0, 
+        shrinking=True, 
+        probability=False, #是否使用概率估計
+        tol=0.001, #0.001殘差收斂條件
+        cache_size=200, #緩衝大小
+        class_weight=None, #{0:0.4,1:0.6}, 'balance'
+        verbose=False, 
+        max_iter=-1, 
+        decision_function_shape=None, #'ovo', 'ovr' or None
+        random_state=None #數據洗牌時的種子值
+        )
 
-n_fold = 20
-folds = StratifiedKFold(n_splits=n_fold, shuffle=True, random_state=42)
-log = LogisticRegression(solver='liblinear', max_iter=1000)
-parameter_grid = {'class_weight' : ['balanced', {0:0.4,1:0.6},{0:0.6,1:0.4}],
-                  'penalty' : ['l1'],
-                  'C' : [0.001, 0.01, 0.1, 1.0, 10.0, 100.0],
-                  'solver': ['liblinear', 'saga',]
-                 }
-grid_search = GridSearchCV(log, param_grid=parameter_grid, cv=folds, scoring='roc_auc')
-grid_search.fit(x_train, y_train)
-
-#log.fit(x_train,y_train)
+svc.fit(x_train,y_train)
 
 
 #result
-prediction = grid_search.predict(test)
+prediction = svc.predict(test)
 prediction = pd.DataFrame(prediction)
 prediction.index += 250
 prediction.columns = ['target']
-prediction.to_csv('C:/Users/user/Desktop/class/maching learning/project/group/Don-t_Overfit_PolyU/result/Logistic Regression(GridSearchCV).csv', index_label='id', index=True)
+prediction.to_csv('C:/Users/user/Desktop/class/maching learning/project/group/Don-t_Overfit_PolyU/result/SVC.csv', index_label='id', index=True)
