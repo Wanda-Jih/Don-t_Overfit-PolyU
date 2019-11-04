@@ -48,6 +48,8 @@ test=pd.DataFrame(scaler.fit_transform(test),columns=test.columns,index=test.ind
 
 #logistic regression
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import GridSearchCV,StratifiedKFold
+'''
 log = LogisticRegression(
         penalty='l1', #l1:拉普拉斯分佈; l2:高斯分佈
         dual=False,
@@ -64,14 +66,24 @@ log = LogisticRegression(
         warm_start=False, #如果為True，則下一次訓練是以追加樹的形式進行（重新使用上一次的調用作為初始化）
         n_jobs=1 #1的時候，用CPU的一個內核運行程序，2的時候，用CPU的2個內核運行程序。為-1的時候，用所有CPU的內核運行程序
         )
+'''
+n_fold = 20
+folds = StratifiedKFold(n_splits=n_fold, shuffle=True, random_state=42)
+log = LogisticRegression(solver='liblinear', max_iter=1000)
+parameter_grid = {'class_weight' : ['balanced', {0:0.4,1:0.6},{0:0.6,1:0.4}],
+                  'penalty' : ['l1'],
+                  'C' : [0.001, 0.01, 0.1, 1.0, 10.0, 100.0],
+                  'solver': ['liblinear', 'saga',]
+                 }
+grid_search = GridSearchCV(log, param_grid=parameter_grid, cv=folds, scoring='roc_auc')
+grid_search.fit(x_train, y_train)
 
-
-log.fit(x_train,y_train)
+#log.fit(x_train,y_train)
 
 
 #result
-prediction = log.predict(test)
+prediction = grid_search.predict(test)
 prediction = pd.DataFrame(prediction)
 prediction.index += 250
 prediction.columns = ['target']
-prediction.to_csv('C:/Users/user/Desktop/class/maching learning/project/group/Don-t_Overfit_PolyU/result/Logistic Regression.csv', index_label='id', index=True)
+prediction.to_csv('C:/Users/user/Desktop/class/maching learning/project/group/Don-t_Overfit_PolyU/result/Logistic Regression(GridSearchCV).csv', index_label='id', index=True)
