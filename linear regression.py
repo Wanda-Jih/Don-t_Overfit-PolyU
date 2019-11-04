@@ -73,19 +73,19 @@ log = LogisticRegression(
         dual=False,
         tol=1e-4,
         C=0.2, #越小的數值表示越強的正則化，正則化是用來防止模型過擬合的過程 1.0/0.5/0.3/0.2/0.1
-        fit_intercept=False,
-        intercept_scaling=1,
-        class_weight=None,
+        fit_intercept=False, #指定是否應該向決策函數添加常量(即偏差或截距)
+        intercept_scaling=1, #：僅在solver為”liblinear”，且fit_intercept設置為True時有用
+        class_weight={0:0.4,1:0.6}, #比如對於0,1的二元模型，我們可以定義class_weight={0:0.9,1:0.1}，這樣類型0的權重為90%，而類型1的權重為10%:None/{0:0.9,1:0.1}/balanced
         random_state=None,
-        solver='liblinear',
-        max_iter=100,
-        multi_class= 'ovr',
-        verbose=0,
-        warm_start=False, 
-        n_jobs=1
+        solver='liblinear', #liblinear適用於小數據集，而sag和saga適用於大數據集因為速度更快:liblinear/saga/newton-cg/lbfgs/sag
+        max_iter=100,#僅在正則化優化算法為newton-cg, sag和lbfgs才有用，算法收斂的最大迭代次數。
+        multi_class= 'ovr', #ovr/multinomial:多分類
+        verbose=0, #印出模型
+        warm_start=False, #如果為True，則下一次訓練是以追加樹的形式進行（重新使用上一次的調用作為初始化）
+        n_jobs=1 #1的時候，用CPU的一個內核運行程序，2的時候，用CPU的2個內核運行程序。為-1的時候，用所有CPU的內核運行程序
         )
 log.fit(x_train,y_train)
-selector = RFE(log, 25, step=1)
+#selector = RFE(log, 25, step=1)
 
 
 #result
