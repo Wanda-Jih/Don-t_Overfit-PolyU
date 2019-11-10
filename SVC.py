@@ -40,8 +40,8 @@ test=get_test_data()
 
 #使用Logistic Regression之前需要先對資料做特徵縮放
 #使用sklearn.preprocessing.StandardScaler類，使用該類的好處在於可以保存訓練集中的參數（均值、方差）直接使用其對象轉換測試集數據。
-from sklearn.preprocessing import StandardScaler
-scaler=StandardScaler()
+from sklearn.preprocessing import StandardScaler,RobustScaler
+scaler=RobustScaler()
 x_train=pd.DataFrame(scaler.fit_transform(x_train0),columns=x_train0.columns,index=x_train0.index)
 test=pd.DataFrame(scaler.fit_transform(test),columns=test.columns,index=test.index)
 
@@ -73,4 +73,4 @@ prediction = svc.predict(test)
 prediction = pd.DataFrame(prediction)
 prediction.index += 250
 prediction.columns = ['target']
-prediction.to_csv('C:/Users/user/Desktop/class/maching learning/project/group/Don-t_Overfit_PolyU/result/SVC.csv', index_label='id', index=True)
+prediction.to_csv('C:/Users/user/Desktop/class/maching learning/project/group/Don-t_Overfit_PolyU/result/SVC(RobustScaler).csv', index_label='id', index=True)

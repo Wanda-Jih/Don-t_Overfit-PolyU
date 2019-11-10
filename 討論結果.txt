@@ -1,0 +1,36 @@
+Don't Overfit!
+解決這個問題的辦法
+1.增加數據
+2.降維
+
+
+流程：
+1.可視化數據：
+多一些表格、圖像呈現dataset
+
+2.找出不同種降維的方法：
+PCA的維度比樣本數高
+probing暴力方法
+以表格呈現每個方法的結果
+(1)：丟棄一些對我們最終預測結果影響不大的特徵，具體哪些特徵需要丟棄可以通過PCA算法來實現；
+(2)：使用正則化技術，保留所有特徵，但是減少特徵前面的參數θ的大小，具體就是修改線性回歸中的損失函數形式即可，嶺回歸(ridge regression)以及Lasso回歸就是這麼做的
+(3)暴力找到髒髒的數據
+
+3.訓練模型(Logistic Regression, MLP, K means, Lasso, Bayson)：
+比較後用表格呈現，選出acc.最高的模型，並說明為甚麼這個模型最好(ex.Logistic Regression的l1和l2比較，Lasso比Logistic Regression和Linear Regression好，推測Lasso會把不好的資料去掉)
+
+
+*行有餘力再做
+1.cross validation(CV)
+2.模型集成
+
+
+
+工作分配：
+可視化數據圖型(1)：秦
+資料降維(1)：紀
+模型訓練(2)：鄭、賈
+
+
+
+
